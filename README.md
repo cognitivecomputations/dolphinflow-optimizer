@@ -2,6 +2,10 @@
 
 DolphinFlow is a pragmatic, hardware agnostic, memory-efficient PyTorch optimizer that uses orthogonalization techniques to improve neural network training stability and performance, particularly for models with large, dense layers.
 
+DolphinFlow is inspired by the optimizers I've worked with, including Muon and AdamW, with a focus on fine tuning pretrained and instruct tuned large language models such as Llama, Mistral, Qwen, DeepSeek, Gemma, Phi, and others.
+
+DolphinFlow is about results.  I'm a practitioner, not a theoretician.  I build things that do things.
+
 ## Overview
 
 DolphinFlow addresses several key challenges in training deep neural networks:
