@@ -38,7 +38,7 @@ Standard optimizers can lead to highly correlated weight updates, reducing the e
 ## Installation
 
 ```bash
-pip install dolphinflow  # If published to PyPI
+pip install dolphinflow
 ```
 
 Alternatively, copy the `dolphinflow.py` file directly into your project.
