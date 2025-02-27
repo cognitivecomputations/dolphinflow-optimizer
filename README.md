@@ -20,7 +20,36 @@ DolphinFlow addresses several key challenges in training deep neural networks:
 
 ## Why Orthogonalization?
 
-Standard optimizers can lead to highly correlated weight updates, reducing the effective dimensionality of the update space. This can hinder the model's ability to explore the full parameter space and slow down or prevent convergence. Orthogonalizing gradients helps maintain the full dimensionality of the updates, leading to more efficient training.
+Standard optimizers can lead to highly correlated weight updates, reducing the effective dimensionality of the update space. This can hinder the model's ability to explore the full parameter space and slow down or prevent convergence. Orthogonalizing gradients helps maintain the full dimensionality of the updates, leading to more efficient training. This is particularly important for overparameterized models, like large language models, where the number of parameters vastly exceeds the number of training samples.
+
+## Grokking, Overfitting, and Fine-tuning
+
+When fine-tuning large language models, it's crucial to avoid overfitting to the fine-tuning dataset, which would cause the model to lose its general knowledge gained during pretraining (catastrophic forgetting).  However, some degree of "memorization" of the fine-tuning data is often necessary to achieve optimal performance on the target task. This can sometimes lead to a phenomenon known as "grokking," where the model initially appears to overfit but then suddenly generalizes well.
+
+DolphinFlow incorporates several features to help manage this balance:
+
+-   **Orthogonalization:** Helps prevent the model from collapsing onto a low-dimensional subspace, encouraging exploration of the parameter space and potentially delaying the onset of overfitting, giving the model a longer "chance" to grok.
+-   **Low Learning Rates:**  Using a small learning rate (typically 1e-5 or lower) is essential for fine-tuning. This prevents large updates that could drastically alter the pre-trained weights.  Consider using differential learning rates for different layers.
+-   **Adaptive Learning Rates:**  The `adaptive_lr` option (Adam-like) can help adjust to the scale of different parameters, which is beneficial for fine-tuning.
+-   **Weight Decay:**  A moderate amount of weight decay (e.g., 1e-2) can help regularize the model and prevent overfitting.  Experiment with different values.
+-   **Gradient Clipping:**  Helps prevent exploding gradients, which can destabilize training and lead to overfitting.
+-   **Trust Region (Optional):**  The `trust_region` option can provide additional stability, but it's generally not necessary unless you encounter significant instability.
+
+**Monitoring for Grokking:**
+
+-   **Track both Training and Validation Loss:** Carefully monitor both the training loss and the validation loss throughout training.
+-   **Expect Initial Overfitting:** Don't be alarmed if the validation loss initially stays high while the training loss decreases. This is common in fine-tuning.
+-   **Look for a Sudden Drop in Validation Loss:**  If you observe a sudden, significant drop in validation loss after a period of apparent overfitting, this could indicate grokking.
+-   **Patience:**  Grokking can take a long time. Be prepared to train for many epochs.
+
+**If you observe consistent overfitting (validation loss increasing) without any signs of grokking, consider:**
+
+-   **Reducing the learning rate further.**
+-   **Increasing weight decay.**
+-   **Using a smaller model.**
+-   **Increasing the size of your fine-tuning dataset.**
+-   **Using data augmentation techniques.**
+-   **Early Stopping:** Use Early Stopping, but be generous.
 
 ## Key Features
 
