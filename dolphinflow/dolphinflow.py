@@ -1,5 +1,4 @@
 import torch
-from typing import Iterable, Callable, Optional
 import logging
 from torch import Tensor
 from typing import Optional, Callable, Iterable, Tuple
