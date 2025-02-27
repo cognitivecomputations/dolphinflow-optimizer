@@ -76,7 +76,7 @@ Alternatively, copy the `dolphinflow.py` file directly into your project.
 
 ```python
 import torch
-from your_module import DolphinFlow  # Replace your_module with the appropriate import
+from dolphinflow import DolphinFlow
 
 # Example model
 model = torch.nn.Sequential(
