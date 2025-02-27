@@ -4,11 +4,11 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "dolphinflow"
-version = "0.1.0"
+version = "0.1.1"
 description = "DolphinFlow optimizer for PyTorch"
 readme = "README.md"
 authors = [{name = "Eric Hartford", email = "ehartford@gmail.com"}]
-license = {text = "MIT"}
+license = {file = "LICENSE"}
 classifiers = [
     "Development Status :: 3 - Alpha",
     "Intended Audience :: Developers",
@@ -32,3 +32,6 @@ Homepage = "https://github.com/cognitivecomputations/dolphinflow-optimizer"
 
 [tool.setuptools.packages.find]
 include = ["dolphinflow*"]
+
+[tool.setuptools]
+license-files = ["LICENSE"]

@@ -30,8 +30,8 @@ def newton_schulz_step_inplace(X: Tensor, a: float, b: float, c: float) -> Tenso
     A = X @ X.mT  # shape: (r, r)
     A2 = A @ A    # shape: (r, r)
     # B = b*A + c*A2
-    torch.mul(A, b, out=A)   # re-use A
-    torch.addcmul(A, A2, value=c, out=A)  # A = b*A + c*A2
+    A.mul_(b)  # A = b*A
+    A.add_(A2, alpha=c)  # A = A + c*A2
     # Now X = a * X + A @ X
     # We'll do: temp = A @ X
     temp = A @ X
