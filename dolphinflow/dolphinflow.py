@@ -388,7 +388,7 @@ class DolphinFlow(torch.optim.Optimizer):
                 # For >2D, if "vector" is chosen, we do vectorwise_orthogonal_grad
                 # else we skip or do fallback. 
                 shape = p.shape
-                if shape.ndim == 2:
+                if len(shape) == 2:
                     if ortho_mode == "block":
                         block_orthogonalize_inplace(
                             grad_for_update, 
@@ -410,7 +410,7 @@ class DolphinFlow(torch.optim.Optimizer):
                         vectorwise_orthogonal_grad(p.data, grad_for_update)
                         if verbose:
                             self.logger.debug(f"step={step_i} param={param_name}: vectorwise orthogonalization applied")
-                elif shape.ndim > 2 and ortho_mode == "vector":
+                elif len(shape) > 2 and ortho_mode == "vector":
                     # For conv filters or multi-dim, do simple vectorwise approach
                     vectorwise_orthogonal_grad(p.data, grad_for_update)
                     if verbose:
