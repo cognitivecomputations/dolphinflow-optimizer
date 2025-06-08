@@ -4,7 +4,7 @@ DolphinFlow is a pragmatic, robust, and hardware-agnostic PyTorch optimizer that
 
 DolphinFlow is about results. I'm a practitioner, not a theoretician. I build things that do things. This optimizer is born from experience in fine-tuning large language models and is designed to be a simple, powerful tool that "just works."
 
-It comes in two versions:
+It comes in two perfected, "ship-and-forget" versions:
 *   **`DolphinFlow`**: The standard, ultra-robust 32-bit optimizer.
 *   **`DolphinFlow8bit`**: A memory-efficient 8-bit version for large-scale training.
 
@@ -12,7 +12,7 @@ It comes in two versions:
 
 Standard optimizers can cause weight updates to become highly correlated, reducing the effective dimensionality of the search space. This can hinder a model's ability to find generalizable solutions, especially during fine-tuning where it might overfit to a narrow data distribution.
 
-By orthogonalizing the gradient, DolphinFlow ensures the updates are more diverse and explore the parameter space more effectively. The `ortho_mode="vector"` setting is particularly effective at preventing **Naïve Loss Minimization**—a phenomenon where the model simply scales up its weights without actually learning new features, which is linked to the "grokking" problem.
+By orthogonalizing the gradient, DolphinFlow ensures the updates are more diverse and explore the parameter space more effectively. The `ortho_mode="vector"` setting is particularly effective at preventing **Naïve Loss Minimization**—a phenomenon where the model simply scales up its weights without actually learning new features. This idea is heavily inspired by the analysis of grokking and numerical stability in modern deep learning.
 
 ## Installation
 
@@ -70,7 +70,7 @@ optimizer = DolphinFlow8bit(model.parameters(), lr=1e-4)
 
 ## Key Features & Parameters
 
-The API has been simplified to its essential, robust components. Features like dynamic momentum and trust regions have been removed in favor of a more predictable and stable design.
+The API has been simplified to its essential, robust components.
 
 *   `lr: float = 1e-4`: The learning rate. A low LR is essential for fine-tuning.
 *   `ortho_mode: str = "vector"`: The orthogonalization strategy.
@@ -129,16 +129,45 @@ The standard 32-bit `DolphinFlow` is the perfect companion for `torch.amp`. For 
 
 ## Citation
 
-If you use DolphinFlow in your work, please consider citing it:
+If you use DolphinFlow in your research, please consider citing the software directly:
 
-```
-@misc{dolphinflow2024,
+```bibtex
+@misc{hartford2024dolphinflow,
   author = {Eric Hartford},
   title = {DolphinFlow: A Robust Orthogonalizing Optimizer for PyTorch},
   year = {2024},
   publisher = {GitHub},
   journal = {GitHub repository},
   howpublished = {\url{https://github.com/cognitivecomputations/dolphinflow-optimizer}}
+}
+```
+
+## Acknowledgements and Inspirations
+
+DolphinFlow is a pragmatic synthesis of several powerful ideas from the optimizer and deep learning literature. It stands on the shoulders of giants, and proper credit is essential.
+
+*   The **vector-wise orthogonalization** (`ortho_mode="vector"`) is directly inspired by the `⊥Grad` concept introduced by **Lucas Prieto et al.** in their work on grokking. Their insight that preventing Naïve Loss Minimization can lead to faster generalization is a core motivation for this feature.
+*   The **Newton-Schulz iteration** used in `ortho_mode="matrix"` adopts the highly effective quintic polynomial coefficients `(a=3.4445, b=-4.7750, c=2.0315)` discovered by **Keller Jordan et al.** for their Muon optimizer.
+*   The general framework benefits from the robust design patterns of **AdamW** (decoupled weight decay) and **SGD** (Nesterov momentum).
+
+We strongly encourage you to also read and cite these foundational works:
+
+```bibtex
+@misc{jordan2024muon,
+  author       = {Keller Jordan and Yuchen Jin and Vlado Boza and You Jiacheng and
+                  Franz Cesista and Laker Newhouse and Jeremy Bernstein},
+  title        = {Muon: An optimizer for hidden layers in neural networks},
+  year         = {2024},
+  url          = {https://kellerjordan.github.io/posts/muon/}
+}
+
+@article{prieto2025grokking,
+  title={Grokking at the Edge of Numerical Stability},
+  author={Prieto, Lucas and Barsbey, Melih and Mediano, Pedro and Birdal, Tolga},
+  year = {2025},
+  eprint={2501.04697},
+  archivePrefix={arXiv},
+  primaryClass={cs.LG}
 }
 ```
 
