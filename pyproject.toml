@@ -1,37 +1,47 @@
 [build-system]
-requires = ["setuptools>=45", "wheel"]
+requires = ["setuptools>=61.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
 name = "dolphinflow"
-version = "0.1.1"
-description = "DolphinFlow optimizer for PyTorch"
+# PERFECTION NOTE: Version bumped to 0.2.0 to signify a new feature release.
+version = "0.2.0"
+description = "DolphinFlow: A robust, low-maintenance optimizer for PyTorch."
 readme = "README.md"
 authors = [{name = "Eric Hartford", email = "ehartford@gmail.com"}]
 license = {file = "LICENSE"}
 classifiers = [
-    "Development Status :: 3 - Alpha",
+    # PERFECTION NOTE: Changed status to Beta, reflecting more confidence.
+    "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
     "Programming Language :: Python :: 3",
-    "Programming Language :: Python :: 3.7",
     "Programming Language :: Python :: 3.8",
     "Programming Language :: Python :: 3.9",
     "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
 ]
-keywords = ["pytorch", "optimizer", "machine learning"]
+keywords = ["pytorch", "optimizer", "machine learning", "deep learning"]
 dependencies = [
-    "torch>=1.0.0",
+    "torch>=1.10", # A more realistic minimum version for modern features
 ]
-requires-python = ">=3.7"
+requires-python = ">=3.8"
 
 [project.urls]
 Homepage = "https://github.com/cognitivecomputations/dolphinflow-optimizer"
 "Bug Tracker" = "https://github.com/cognitivecomputations/dolphinflow-optimizer/issues"
 
+# PERFECTION NOTE: This is the critical new section.
+# It defines an "extra" for installing the 8-bit optimizer's dependency.
+[project.optional-dependencies]
+bnb = ["bitsandbytes>=0.41.0"]
+
 [tool.setuptools.packages.find]
+where = ["."]
 include = ["dolphinflow*"]
+exclude = ["tests*"]
 
 [tool.setuptools]
 license-files = ["LICENSE"]
