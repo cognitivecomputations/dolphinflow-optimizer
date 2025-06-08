@@ -4,7 +4,7 @@ DolphinFlow is a pragmatic, robust, and hardware-agnostic PyTorch optimizer that
 
 DolphinFlow is about results. I'm a practitioner, not a theoretician. I build things that do things. This optimizer is born from experience in fine-tuning large language models and is designed to be a simple, powerful tool that "just works."
 
-It comes in two versions:
+It comes in two perfected, "ship-and-forget" versions:
 *   **`DolphinFlow`**: The standard, ultra-robust 32-bit optimizer.
 *   **`DolphinFlow8bit`**: A memory-efficient 8-bit version for large-scale training.
 
@@ -23,7 +23,7 @@ The package is designed for a clean and simple installation experience.
 The standard version has no dependencies beyond PyTorch.
 
 ```bash
-pip install dolphinfow-optimizer
+pip install dolphinflow-optimizer
 ```
 
 ### 8-bit Version (Recommended for Large Models)
@@ -31,7 +31,7 @@ pip install dolphinfow-optimizer
 To use the memory-efficient 8-bit version, you must also install the `bitsandbytes` library. You can do this by specifying the `[bnb]` extra during installation:
 
 ```bash
-pip install dolphinfow-optimizer[bnb]
+pip install dolphinflow-optimizer[bnb]
 ```
 
 ## Basic Usage
@@ -42,16 +42,13 @@ This version is recommended for most use cases due to its Nesterov momentum impl
 
 ```python
 import torch
-from dolphinfow import DolphinFlow
+from dolphinflow import DolphinFlow
 
 # Example model
 model = torch.nn.Linear(100, 10)
 
 # Use it like any other PyTorch optimizer
 optimizer = DolphinFlow(model.parameters(), lr=1e-4)
-
-# Training loop
-# ...
 ```
 
 ### Using the 8-bit `DolphinFlow8bit`
@@ -60,7 +57,7 @@ This version is a drop-in replacement that dramatically reduces optimizer memory
 
 ```python
 import torch
-from dolphinfow import DolphinFlow8bit
+from dolphinflow import DolphinFlow8bit
 
 model = torch.nn.Linear(100, 10)
 
@@ -82,6 +79,22 @@ The API has been simplified to its essential, robust components.
 *   `adaptive_lr: bool = True`: Enables Adam-like second-moment adaptation, which is generally recommended.
 *   `gradient_clipping: float = 1.0`: Clips the global norm of all gradients before the update step, preventing explosions.
 
+## Advanced Usage: Combining with StableMax
+
+The `grokking` paper by Prieto et al., which inspired the `ortho_mode="vector"` feature, identified two related issues in training dynamics:
+1.  **The Cause:** Naïve Loss Minimization (NLM), where the optimizer scales up weights, leading to uncontrolled logit growth.
+2.  **The Symptom:** Softmax Collapse, a numerical instability that occurs when logits become too large for standard floating-point precision.
+
+`DolphinFlow` and `StableMax` form a powerful synergistic pair to address both issues:
+*   **`DolphinFlow`** with `ortho_mode="vector"` addresses the **cause** by preventing the NLM gradient direction.
+*   **`StableMax`** addresses the **symptom** by providing a numerically stable alternative to the Softmax function in the cross-entropy loss calculation.
+
+**To create the ideal conditions to achieve grokking and ensure maximum numerical stability, using these two components together is highly recommended.**
+
+> A PyTorch implementation of the `stablemax_cross_entropy` loss function is available as part of the **[Axolotl](https://github.com/OpenAccess-AI-Collective/axolotl)** fine-tuning framework. You can find the implementation and details here:
+>
+> **[https://github.com/cognitivecomputations/axolotl/blob/main/src/axolotl/integrations/stablemax/](https://github.com/cognitivecomputations/axolotl/blob/main/src/axolotl/integrations/stablemax/)**
+
 ## Performance: `torch.compile` and Mixed Precision
 
 `DolphinFlow` is designed to be a modern, high-performance optimizer.
@@ -94,7 +107,7 @@ For maximum performance, use `DolphinFlow` with `torch.compile`, the JIT compile
 
 ```python
 import torch
-from dolphinfow import DolphinFlow
+from dolphinflow import DolphinFlow
 
 # Your optimizer and model
 optimizer = DolphinFlow(...)
