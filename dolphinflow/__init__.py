@@ -14,4 +14,4 @@ except ImportError:
     pass
 
 __all__ = ['DolphinFlow', 'DolphinFlow8bit']
-__version__ = '0.1.2'
+__version__ = '0.2.0'
