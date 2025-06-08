@@ -4,7 +4,7 @@ DolphinFlow is a pragmatic, robust, and hardware-agnostic PyTorch optimizer that
 
 DolphinFlow is about results. I'm a practitioner, not a theoretician. I build things that do things. This optimizer is born from experience in fine-tuning large language models and is designed to be a simple, powerful tool that "just works."
 
-It comes in two perfected, "ship-and-forget" versions:
+It comes in two versions:
 *   **`DolphinFlow`**: The standard, ultra-robust 32-bit optimizer.
 *   **`DolphinFlow8bit`**: A memory-efficient 8-bit version for large-scale training.
 
